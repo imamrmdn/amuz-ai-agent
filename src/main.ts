@@ -278,7 +278,7 @@ async function main() {
       const WEB_APP_URL = 'https://tereon-app-ecosystem.vercel.app/';
 
       const videoPath =
-        'https://res.cloudinary.com/drmwcjsgc/video/upload/v1733681389/gj3bgmqujlhde96ycjvm.mp4';
+        'https://res.cloudinary.com/drmwcjsgc/video/upload/v1733839066/iqwmrblzyybdscrpbehl.mp4';
 
       // bot.sendMessage(chatId, textInfo.welcomeLaunch, {
       //   parse_mode: 'Markdown',
