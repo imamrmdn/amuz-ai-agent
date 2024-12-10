@@ -10,14 +10,14 @@ export enum CallbackInfo {
   CANCEL = 9,
   CREDITS = 10,
   SOON_FITUR = 11,
+  TTG = 12,
 }
 
 const welcome = `
-*Tereon ⚡️*
+*Amuz AI Agent 🌙*
+*Revolutionizing Web3 with Intelligent AI Agents*
 
-*Redefining Online Privacy
-with AI-Powered Solutions*
-
+Amuz AI Agent transforms how developers, traders, entrepreneurs, and designers navigate the Web3 landscape. Leveraging advanced AI-powered agents, the platform automates complex tasks, accelerates workflows, and amplifies creativity.
 `;
 
 const guidline = `
@@ -112,6 +112,22 @@ export function commingSoon(fitur: string) {
 
 const soon_feature = `*This feature will soon be updated in the near future. Please wait as it is still undergoing improvements by the developer.*`;
 
+const instructions = `
+*Trader*
+- Type anything to get the latest market analysis and trading opportunities!
+
+*Designer*
+- Type your design needs to get inspiration, concepts, or color palettes!
+
+*Developer*
+-Type technical questions for quick debugging or coding solutions!
+
+*Entrepreneur*
+-Ask anything about business strategies or your startup ideas!
+
+Give it a try, and the Amuz AI Agent is ready to assist your needs quickly and accurately! 🚀
+`;
+
 export function detectNumber(text: string) {
   const str = text;
   const regex = /&(\d+)/;
@@ -143,4 +159,5 @@ export const textInfo = {
   errorCondition,
   commandMeme,
   welcomeLaunch,
+  instructions,
 };

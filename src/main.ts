@@ -18,6 +18,8 @@ import {
 
 import { keyboardMarkup } from './shared/utils/keyboard-markup';
 
+import OpenAI from 'openai';
+
 import 'dotenv/config';
 
 // replace the value below with the Telegram token you receive from @BotFather
@@ -27,6 +29,10 @@ const token_bot = process.env.TOKEN_BOT;
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token_bot, { polling: true });
+
+const clientOpenAi = new OpenAI({
+  apiKey: process.env.OPENAI_APIKEY,
+});
 
 //
 // let maxUsagePerChat = 3;
@@ -212,7 +218,20 @@ const bot = new TelegramBot(token_bot, { polling: true });
 //     return;
 //   }
 // }
-
+async function getAIResponse(prompt: string): Promise<any> {
+  try {
+    const completion = await clientOpenAi.completions.create({
+      prompt,
+      model: 'gpt-3.5-turbo-instruct',
+      max_tokens: 100,
+    });
+    console.log({ log_completio: completion.choices[0].text.trim() });
+    return completion.choices[0].text.trim();
+  } catch (error) {
+    console.error('Error with OpenAI API:', error);
+    return 'Error: Unable to process your request at the moment.';
+  }
+}
 //
 async function main() {
   //
@@ -258,22 +277,25 @@ async function main() {
       // send a message to the chat acknowledging receipt of their message
       const WEB_APP_URL = 'https://tereon-app-ecosystem.vercel.app/';
 
-      bot.sendMessage(chatId, textInfo.welcomeLaunch, {
-        parse_mode: 'Markdown',
-        // reply_markup: JSON.stringify({
-        //   inline_keyboard: keyboardMarkup.start,
-        // }),
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: 'Launch', web_app: { url: WEB_APP_URL } }],
-          ],
-        },
-      });
+      const videoPath =
+        'https://res.cloudinary.com/drmwcjsgc/video/upload/v1733681389/gj3bgmqujlhde96ycjvm.mp4';
+
+      // bot.sendMessage(chatId, textInfo.welcomeLaunch, {
+      //   parse_mode: 'Markdown',
+      //   // reply_markup: JSON.stringify({
+      //   //   inline_keyboard: keyboardMarkup.start,
+      //   // }),
+      //   reply_markup: {
+      //     inline_keyboard: [
+      //       [{ text: 'Launch', web_app: { url: WEB_APP_URL } }],
+      //     ],
+      //   },
+      // });
+      await bot.sendVideo(chatId, videoPath, keyboardMarkup.welcome as any);
     } else {
-      bot.sendMessage(
-        chatId,
-        'There are no commands that you execute or invalid command',
-      );
+      const resp = await getAIResponse(messageText);
+      console.log({ log: resp });
+      bot.sendMessage(chatId, resp);
     }
 
     // else if (matchMeme) {
@@ -363,6 +385,9 @@ async function main() {
       // case CallbackInfo.CARTOON:
       //   bot.sendMessage(chatId, textInfo.commandCartoon);
       //   break;
+      case CallbackInfo.TTG:
+        bot.sendMessage(chatId, textInfo.instructions);
+        break;
       case CallbackInfo.MEME:
         bot.sendMessage(chatId, textInfo.commandMeme);
         break;
