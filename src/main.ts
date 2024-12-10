@@ -293,8 +293,19 @@ async function main() {
       // });
       await bot.sendVideo(chatId, videoPath, keyboardMarkup.welcome as any);
     } else {
+      let mssg;
+
+      bot
+        .sendMessage(chatId, 'generate...')
+        .then((message) => (mssg = message.message_id));
+
       const resp = await getAIResponse(messageText);
       console.log({ log: resp });
+
+      if (mssg) {
+        bot.deleteMessage(chatId, mssg);
+      }
+
       bot.sendMessage(chatId, resp);
     }
 
